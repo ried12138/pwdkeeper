@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import SuccessView from '../views/SuccessView.vue'
+import HomeView from '../views/Home.vue'
+import SuccessView from '../views/SuccessView.vue' // 确认路径正确
 
 const routes = [
   {
@@ -11,7 +11,7 @@ const routes = [
   {
     path: '/success',
     name: 'Success',
-    component: SuccessView
+    component: SuccessView // 确认路径正确
   }
 ]
 

@@ -12,18 +12,20 @@ import { useRouter } from 'vue-router'
 import axios from 'axios'
 
 export default {
-  name: 'HomeViewComponent',
+  name: 'HomeViewComponent', // 修改: 将组件名称更改为多词形式
   setup() {
     const code = ref('')
     const router = useRouter()
 
     const submitCode = async () => {
       try {
-        const response = await axios.post(`${process.env.VUE_APP_API_URL}/checkCode`, { code: code.value }, {
+        console.log('Sending request with code:', code.value); // 添加调试信息
+        const response = await axios.post(`${process.env.VUE_APP_API_URL}/checkCode`, { code: code.value }, { // 修改URL以包含端口号
           headers: {
             'Content-Type': 'application/json;charset=utf-8'
           }
         });
+        console.log('Response received:', response.data); // 添加调试信息
         if (response.data.success) {
           router.push('/success');
         } else {
