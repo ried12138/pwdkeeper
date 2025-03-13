@@ -1,44 +1,48 @@
 <template>
-  <div>
-    <h1>输入验证码</h1>
-    <input v-model="code" placeholder="请输入验证码" />
-    <button @click="submitCode">提交</button>
+  <div class="home">
+    <h1>验证码校验</h1>
+    <input v-model="verifyCode" placeholder="请输入验证码" />
+    <button @click="submitVerifyCode">提交</button>
+    <p v-if="message" class="message">{{ message }}</p> <!-- 添加提示信息显示 -->
   </div>
 </template>
 
 <script>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import axios from 'axios'
+import { sendRequest } from '@/utils/request';
 
 export default {
-  name: 'HomeViewComponent',
-  setup() {
-    const code = ref('')
-    const router = useRouter()
-
-    const submitCode = async () => {
-      try {
-        const response = await axios.post(`${process.env.VUE_APP_API_URL}/checkCode`, { code: code.value }, {
-          headers: {
-            'Content-Type': 'application/json;charset=utf-8'
-          }
-        });
-        if (response.data.success) {
-          router.push('/success');
-        } else {
-          alert('验证码错误');
-        }
-      } catch (error) {
-        console.error('提交验证码失败', error);
-        alert('提交失败，请重试');
-      }
-    };
-
+  name: 'HomePage', // 修改: 将组件名称从 'Home' 改为 'HomePage'
+  data() {
     return {
-      code,
-      submitCode
+      verifyCode: '',
+      message: '' // 添加提示信息数据
+    };
+  },
+  methods: {
+    submitVerifyCode() {
+      const requestBody = { verifyCode: this.verifyCode };
+      sendRequest('/webFront/verifyCode', requestBody)
+        .then(response => {
+          console.log('验证码校验成功', response);
+          this.message = '欢迎光临'; // 设置提示信息
+        })
+        .catch(error => {
+          console.error('验证码校验失败', error);
+          this.message = error.message; // 设置错误提示信息
+        });
     }
   }
-}
+};
 </script>
+
+<style scoped>
+.home {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.message {
+  margin-top: 20px;
+  color: green;
+}
+</style>
